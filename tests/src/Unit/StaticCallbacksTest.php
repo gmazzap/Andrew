@@ -21,7 +21,6 @@ use Andrew\Tests\Stub;
  */
 class StaticCallbacksTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @expectedException \Andrew\Exception\ClassException
      */

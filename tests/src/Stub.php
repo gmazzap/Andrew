@@ -46,7 +46,7 @@ class Stub
     }
 
     /**
-     * @param string $var
+     * @param  string $var
      * @return string
      */
     private static function privateStaticMethod($var = '')
@@ -87,7 +87,7 @@ class Stub
     }
 
     /**
-     * @param string $var
+     * @param  string $var
      * @return string
      */
     private function privateDynamicMethod($var = '')

@@ -11,7 +11,6 @@
 namespace Andrew\Tests\Unit;
 
 use PHPUnit_Framework_TestCase;
-
 use Andrew\Checker\Checker;
 
 /**
@@ -21,7 +20,6 @@ use Andrew\Checker\Checker;
  */
 class CheckerTest extends PHPUnit_Framework_TestCase
 {
-
     private static $staticvar;
     private $var;
 

@@ -21,7 +21,6 @@ use Andrew\Tests\Stub;
  */
 class DynamicCallbacksTest extends PHPUnit_Framework_TestCase
 {
-
     /**
      * @expectedException \Andrew\Exception\ArgumentException
      */
