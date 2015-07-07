@@ -71,7 +71,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Andrew\StaticProxy\__set
+     * @covers \Andrew\StaticProxy\__set
      */
     public function testSetter()
     {
@@ -124,7 +124,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Andrew\StaticProxy\__isset
+     * @covers \Andrew\StaticProxy\__isset
      */
     public function testIsser()
     {
@@ -175,7 +175,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Andrew\Exception\RuntimeException
-     * @covers Andrew\StaticProxy\__unset
+     * @covers \Andrew\StaticProxy\__unset
      */
     public function testUnsetterFails()
     {
@@ -194,7 +194,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Andrew\StaticProxy\__call
+     * @covers \Andrew\StaticProxy\__call
      */
     public function testCaller()
     {
