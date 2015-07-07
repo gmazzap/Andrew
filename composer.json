@@ -1,0 +1,44 @@
+{
+    "name": "gmazzap/andrew",
+    "description": "Proxy objects to access (dynamic and static) private properties and methods.",
+    "keywords": [
+        "proxy objects",
+        "unit tests"
+    ],
+    "homepage": "https://github.com/Giuseppe-Mazzapica/Andrew",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Giuseppe Mazzapica",
+            "email": "giuseppe.mazzapica@gmail.com",
+            "homepage": "http://gm.zoomlab.it",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Andrew\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Andrew\\Tests\\": "tests/src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.4"
+    },
+    "config": {
+        "optimize-autoloader": true
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.1.x-dev"
+        }
+    }
+}
