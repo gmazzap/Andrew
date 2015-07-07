@@ -19,9 +19,8 @@ use Andrew\Tests\Stub;
  */
 class StaticProxyTest extends PHPUnit_Framework_TestCase
 {
-
     /**
-     * @covers \Andrew\StaticProxy\__get
+     * @coversNothing
      */
     public function testGetter()
     {
@@ -71,7 +70,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Andrew\StaticProxy\__set
+     * @coversNothing
      */
     public function testSetter()
     {
@@ -124,7 +123,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Andrew\StaticProxy\__isset
+     * @coversNothing
      */
     public function testIsser()
     {
@@ -175,7 +174,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Andrew\Exception\RuntimeException
-     * @covers \Andrew\StaticProxy\__unset
+     * @coversNothing
      */
     public function testUnsetterFails()
     {
@@ -194,7 +193,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Andrew\StaticProxy\__call
+     * @coversNothing
      */
     public function testCaller()
     {

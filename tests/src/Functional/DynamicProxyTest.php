@@ -17,7 +17,7 @@ use Andrew\Tests\Stub;
 class DynamicProxyTest extends PHPUnit_Framework_TestCase
 {
     /**
-     * @covers \Andrew\Proxy::__get
+     * @coversNothing
      */
     public function testGetter()
     {
@@ -129,7 +129,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Andrew\Proxy::__isset
+     * @coversNothing
      */
     public function testIsser()
     {
@@ -186,7 +186,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Andrew\Proxy::__unset
+     * @coversNothing
      */
     public function testUnsetter()
     {
@@ -245,7 +245,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Andrew\Proxy::__call
+     * @coversNothing
      */
     public function testCaller()
     {
@@ -300,7 +300,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Andrew\Proxy::__invoke
+     * @coversNothing
      */
     public function testInvoke()
     {
