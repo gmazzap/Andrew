@@ -161,6 +161,16 @@ class CheckerTest extends PHPUnit_Framework_TestCase
      * @expectedException \Andrew\Exception\MethodException
      * @expectedExceptionMessage WTF?!?
      */
+    public function testAssertMethodExceptionIfNoMethod()
+    {
+        $checker = new Checker();
+        $checker->assertStaticMethod(__CLASS__, 'meh!', 'WTF?!?');
+    }
+
+    /**
+     * @expectedException \Andrew\Exception\MethodException
+     * @expectedExceptionMessage WTF?!?
+     */
     public function testAssertMethodExceptionIfDynamicMethod()
     {
         $checker = new Checker();
