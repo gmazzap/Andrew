@@ -72,7 +72,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers \Andrew\Proxy::__set
+     * @coversNothing
      */
     public function testSetter()
     {
