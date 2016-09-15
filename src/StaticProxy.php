@@ -19,7 +19,7 @@ use Andrew\Exception\RuntimeException;
  * @license http://opensource.org/licenses/MIT MIT
  * @package Andrew
  */
-final class StaticProxy
+final class StaticProxy extends \stdClass
 {
     /**
      * @var array

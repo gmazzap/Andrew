@@ -18,7 +18,7 @@ use Andrew\Callbacks\DynamicCallbacks;
  * @license http://opensource.org/licenses/MIT MIT
  * @package Andrew
  */
-final class Proxy
+final class Proxy extends \stdClass
 {
     /**
      * @var array
