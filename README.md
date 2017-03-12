@@ -137,7 +137,7 @@ No. But may be quite useful in unit tests.
 
 # Requirements
 
-*Andrew* has no dependencies. Requires PHP 5.4+, works with PHP 7 and HHVM. 
+*Andrew* has no dependencies. Requires PHP 5.6+, works with PHP 7 and 7.1. 
 
 # License
 
