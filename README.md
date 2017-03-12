@@ -4,8 +4,8 @@
 
 -------
 
-[![travis-ci status](https://img.shields.io/travis/gmazzap/Andrew.svg?style=flat-square)](https://travis-ci.org/Giuseppe-Mazzapica/Andrew)
-[![codecov.io](https://img.shields.io/codecov/c/github/gmazzap/Andrew.svg?style=flat-square)](http://codecov.io/github/Giuseppe-Mazzapica/Andrew?branch=master)
+[![travis-ci status](https://img.shields.io/travis/gmazzap/Andrew.svg?style=flat-square)](https://travis-ci.org/gmazzap/Andrew)
+[![codecov.io](https://img.shields.io/codecov/c/github/gmazzap/Andrew.svg?style=flat-square)](http://codecov.io/github/gmazzap/Andrew?branch=master)
 [![license](https://img.shields.io/github/license/gmazzap/Andrew.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 
 -------
