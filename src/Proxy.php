@@ -102,4 +102,14 @@ final class Proxy extends \stdClass
 
         return $caller('__invoke', $args);
     }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        $caller = $this->callbacks->caller();
+
+        return (string)$caller('__toString');
+    }
 }
