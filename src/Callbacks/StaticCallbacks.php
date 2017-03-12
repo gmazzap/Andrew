@@ -23,7 +23,6 @@ use ReflectionClass;
  */
 final class StaticCallbacks implements CallbacksInterface
 {
-
     const TYPE_CHECKS_MAP = [
         self::GETTER => [
             'assertStaticProperty',
@@ -138,7 +137,6 @@ final class StaticCallbacks implements CallbacksInterface
         $class = $this->class;
 
         $caller = function ($key, $value = null) use ($which, $checker, $class) {
-
             list($checkMethod, $checkMessage) = StaticCallbacks::TYPE_CHECKS_MAP[$which];
             /** @var callable $checkerCallback */
             $checkerCallback = [$checker, $checkMethod];

@@ -25,7 +25,6 @@ use ReflectionException;
  */
 final class Checker
 {
-
     const PROPERTY        = 'property';
     const STATIC_PROPERTY = 'static_property';
     const METHOD          = 'method';
@@ -48,7 +47,7 @@ final class Checker
      */
     public function assertObject($object, $message)
     {
-        if ( ! is_object($object)) {
+        if (! is_object($object)) {
             throw new ArgumentException($message);
         }
     }
@@ -60,7 +59,7 @@ final class Checker
      */
     public function assertString($string, $message)
     {
-        if ( ! is_string($string)) {
+        if (! is_string($string)) {
             throw new ArgumentException($message);
         }
     }
@@ -74,7 +73,7 @@ final class Checker
     public function assertClass($class, $message)
     {
         $this->assertString($class, $message);
-        if ( ! class_exists($class)) {
+        if (! class_exists($class)) {
             throw new ClassException($message);
         }
     }
@@ -108,7 +107,7 @@ final class Checker
             throw new MethodException($message);
         }
 
-        if ( ! isset(self::$checked[self::METHOD][$class])) {
+        if (! isset(self::$checked[self::METHOD][$class])) {
             self::$checked[self::METHOD][$class] = [];
         }
 
@@ -140,11 +139,11 @@ final class Checker
         } catch (ReflectionException $exception) {
             throw new MethodException($message);
         }
-        if ( ! $reflection->isStatic()) {
+        if (! $reflection->isStatic()) {
             throw new MethodException($message);
         }
 
-        if ( ! isset(self::$checked[self::STATIC_METHOD][$class])) {
+        if (! isset(self::$checked[self::STATIC_METHOD][$class])) {
             self::$checked[self::STATIC_METHOD][$class] = [];
         }
 
@@ -180,7 +179,7 @@ final class Checker
             throw new PropertyException($message);
         }
 
-        if ( ! isset(self::$checked[self::PROPERTY][$class])) {
+        if (! isset(self::$checked[self::PROPERTY][$class])) {
             self::$checked[self::PROPERTY][$class] = [];
         }
 
@@ -212,11 +211,11 @@ final class Checker
         } catch (ReflectionException $exception) {
             throw new PropertyException($message);
         }
-        if ( ! $reflection->isStatic()) {
+        if (! $reflection->isStatic()) {
             throw new PropertyException($message);
         }
 
-        if ( ! isset(self::$checked[self::STATIC_PROPERTY][$class])) {
+        if (! isset(self::$checked[self::STATIC_PROPERTY][$class])) {
             self::$checked[self::STATIC_PROPERTY][$class] = [];
         }
 

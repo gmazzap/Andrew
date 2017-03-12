@@ -21,7 +21,6 @@ use Closure;
  */
 final class DynamicCallbacks implements CallbacksInterface
 {
-
     const TYPE_CHECKS_MAP = [
         self::GETTER   => ['assertProperty', 'Undeclared properties can not be retrieved.'],
         self::SETTER   => ['assertProperty', 'Undeclared properties can not be set.'],
@@ -125,7 +124,6 @@ final class DynamicCallbacks implements CallbacksInterface
         $object = $this->object;
 
         $caller = function ($key, $value = null) use ($which, $checker, $object) {
-
             list($checkMethod, $checkMessage) = DynamicCallbacks::TYPE_CHECKS_MAP[$which];
             /** @var callable $checkerCallback */
             $checkerCallback = [$checker, $checkMethod];
