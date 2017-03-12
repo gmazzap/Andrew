@@ -50,6 +50,11 @@ final class DynamicCallbacks implements CallbacksInterface
     private $callbacks = [];
 
     /**
+     * @var bool
+     */
+    private $userDefined;
+
+    /**
      * @param mixed                   $object
      * @param \Andrew\Checker\Checker $checker
      * @throws \Andrew\Exception\ClassException
@@ -66,6 +71,7 @@ final class DynamicCallbacks implements CallbacksInterface
         $this->checker = $checker;
         $this->object = $object;
         $this->class = $class;
+        $this->userDefined = (new \ReflectionClass($class))->isUserDefined();
     }
 
     /**
@@ -148,7 +154,9 @@ final class DynamicCallbacks implements CallbacksInterface
             }
         };
 
-        $this->callbacks[$which] = Closure::bind($caller, $this->object, $this->class);
+        $this->callbacks[$which] = $this->userDefined
+            ? Closure::bind($caller, $this->object, $this->class)
+            : Closure::bind($caller, $this->object);
 
         return $this->callbacks[$which];
     }

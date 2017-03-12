@@ -37,6 +37,13 @@ class StaticCallbacksTest extends PHPUnit_Framework_TestCase
         new StaticCallbacks(\stdClass::class);
     }
 
+    public function testConstructorFailsIfNativeClass()
+    {
+        $this->expectException(ClassException::class);
+
+        new StaticCallbacks(\ArrayObject::class);
+    }
+
     public function testGetter()
     {
         $callbacks = new StaticCallbacks(Stub::class);

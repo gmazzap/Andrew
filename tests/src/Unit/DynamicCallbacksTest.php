@@ -83,4 +83,12 @@ class DynamicCallbacksTest extends PHPUnit_Framework_TestCase
         assertInternalType('callable', $caller);
         assertSame('Private Dynamic Method Test!', $caller('privateDynamicMethod', [' Test!']));
     }
+
+    public function testCallerCoreClass()
+    {
+        $callbacks = new DynamicCallbacks(new \ArrayObject());
+        $caller = $callbacks->caller();
+        assertInternalType('callable', $caller);
+        assertSame([], $caller('getArrayCopy'));
+    }
 }

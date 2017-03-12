@@ -70,11 +70,11 @@ final class StaticCallbacks implements CallbacksInterface
      */
     public function __construct($class, Checker $checker = null)
     {
-        if (ltrim($class, '\\') === 'stdClass') {
-            throw new ClassException('It is not possible to use static proxy with stdClass.');
-        }
         $checker or $checker = new Checker();
         $checker->assertClass($class, __CLASS__.' expects a fully qualified class name.');
+        if (! (new \ReflectionClass($class))->isUserDefined()) {
+            throw new ClassException('It is not possible to use static proxy with PHP native classes.');
+        }
         $this->checker = $checker;
         $this->class = $class;
         $this->object = (new ReflectionClass($class))->newInstanceWithoutConstructor();
