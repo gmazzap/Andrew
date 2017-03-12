@@ -11,6 +11,7 @@
 namespace Andrew\Callbacks;
 
 use Andrew\Checker\Checker;
+use Andrew\Exception\ClassException;
 use Closure;
 
 /**
@@ -20,13 +21,21 @@ use Closure;
  */
 final class DynamicCallbacks implements CallbacksInterface
 {
+    const TYPE_CHECKS_MAP = [
+        self::GETTER   => ['assertProperty', 'Undeclared properties can not be retrieved.'],
+        self::SETTER   => ['assertProperty', 'Undeclared properties can not be set.'],
+        self::ISSER    => ['assertProperty', 'Undeclared properties can not be checked.'],
+        self::UNSETTER => ['assertProperty', 'Undeclared properties can not be unset.'],
+        self::CALLER   => ['assertMethod', 'Undeclared methods can not be called.'],
+    ];
+
     /**
      * @var string
      */
     private $class;
 
     /**
-     * @var object
+     * @var mixed
      */
     private $object;
 
@@ -36,16 +45,27 @@ final class DynamicCallbacks implements CallbacksInterface
     private $checker;
 
     /**
-     * @param object                  $object
+     * @var \Closure[]
+     */
+    private $callbacks = [];
+
+    /**
+     * @param mixed                   $object
      * @param \Andrew\Checker\Checker $checker
+     * @throws \Andrew\Exception\ClassException
+     * @throws \Andrew\Exception\ArgumentException
      */
     public function __construct($object, Checker $checker = null)
     {
-        is_null($checker) and $checker = new Checker();
+        $checker or $checker = new Checker();
         $checker->assertObject($object, __CLASS__.' expects an object.');
+        $class = get_class($object);
+        if (ltrim($class, '\\') === 'stdClass') {
+            throw new ClassException('It is not possible to use proxy with stdClass.');
+        }
         $this->checker = $checker;
         $this->object = $object;
-        $this->class = get_class($object);
+        $this->class = $class;
     }
 
     /**
@@ -53,14 +73,7 @@ final class DynamicCallbacks implements CallbacksInterface
      */
     public function getter()
     {
-        $checker = $this->checker;
-        $getter = function ($var) use ($checker) {
-            $checker->assertProperty($this, $var, 'Undeclared properties can not be retrieved.');
-
-            return $this->$var;
-        };
-
-        return Closure::bind($getter, $this->object, $this->class);
+        return $this->createCallback(self::GETTER);
     }
 
     /**
@@ -68,13 +81,7 @@ final class DynamicCallbacks implements CallbacksInterface
      */
     public function setter()
     {
-        $checker = $this->checker;
-        $setter = function ($var, $value) use ($checker) {
-            $checker->assertProperty($this, $var, 'Undeclared properties can not be set.');
-            $this->$var = $value;
-        };
-
-        return Closure::bind($setter, $this->object, $this->class);
+        return $this->createCallback(self::SETTER);
     }
 
     /**
@@ -82,14 +89,7 @@ final class DynamicCallbacks implements CallbacksInterface
      */
     public function isser()
     {
-        $checker = $this->checker;
-        $isser = function ($var) use ($checker) {
-            $checker->assertProperty($this, $var, 'Undeclared properties can not be checked.');
-
-            return isset($this->$var);
-        };
-
-        return Closure::bind($isser, $this->object, $this->class);
+        return $this->createCallback(self::ISSER);
     }
 
     /**
@@ -97,13 +97,7 @@ final class DynamicCallbacks implements CallbacksInterface
      */
     public function unsetter()
     {
-        $checker = $this->checker;
-        $unsetter = function ($var) use ($checker) {
-            $checker->assertProperty($this, $var, 'Undeclared properties can not be unset.');
-            unset($this->$var);
-        };
-
-        return Closure::bind($unsetter, $this->object, $this->class);
+        return $this->createCallback(self::UNSETTER);
     }
 
     /**
@@ -111,13 +105,51 @@ final class DynamicCallbacks implements CallbacksInterface
      */
     public function caller()
     {
-        $checker = $this->checker;
-        $caller = function ($method, $args) use ($checker) {
-            $checker->assertMethod($this, $method, 'Undeclared methods can not be called.');
+        return $this->createCallback(self::CALLER);
+    }
 
-            return call_user_func_array([$this, $method], $args);
+    /**
+     * @param string $which
+     * @return \Closure
+     */
+    private function createCallback($which)
+    {
+        if (isset($this->callbacks[$which])) {
+            // @codeCoverageIgnoreStart
+            return $this->callbacks[$which];
+            // @codeCoverageIgnoreEnd
+        }
+
+        $checker = $this->checker;
+        $object = $this->object;
+
+        $caller = function ($key, $value = null) use ($which, $checker, $object) {
+            list($checkMethod, $checkMessage) = DynamicCallbacks::TYPE_CHECKS_MAP[$which];
+            /** @var callable $checkerCallback */
+            $checkerCallback = [$checker, $checkMethod];
+            $checkerCallback($object, $key, $checkMessage);
+
+            switch ($which) {
+                case DynamicCallbacks::CALLER:
+                    /** @var callable $method */
+                    $method = [$this, $key];
+
+                    return $value ? $method(...$value) : $method();
+                case DynamicCallbacks::GETTER:
+                    return $this->{$key};
+                case DynamicCallbacks::SETTER:
+                    $this->{$key} = $value;
+                    break;
+                case DynamicCallbacks::ISSER:
+                    return isset($this->{$key});
+                case DynamicCallbacks::UNSETTER:
+                    unset($this->{$key});
+                    break;
+            }
         };
 
-        return Closure::bind($caller, $this->object, $this->class);
+        $this->callbacks[$which] = Closure::bind($caller, $this->object, $this->class);
+
+        return $this->callbacks[$which];
     }
 }

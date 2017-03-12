@@ -29,6 +29,14 @@ class DynamicCallbacksTest extends PHPUnit_Framework_TestCase
         new DynamicCallbacks(__CLASS__);
     }
 
+    /**
+     * @expectedException \Andrew\Exception\ClassException
+     */
+    public function testConstructorFailsIfStdClass()
+    {
+        new DynamicCallbacks(new \stdClass());
+    }
+
     public function testGetter()
     {
         $callbacks = new DynamicCallbacks(new Stub());

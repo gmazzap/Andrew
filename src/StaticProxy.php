@@ -29,6 +29,8 @@ final class StaticProxy extends \stdClass
     /**
      * @param string                               $class
      * @param \Andrew\Callbacks\CallbacksInterface $callbacks
+     * @throws \Andrew\Exception\ArgumentException
+     * @throws \Andrew\Exception\ClassException
      */
     public function __construct($class, CallbacksInterface $callbacks = null)
     {
@@ -41,7 +43,9 @@ final class StaticProxy extends \stdClass
      */
     public function __get($name)
     {
-        return call_user_func($this->callbacks->getter(), $name);
+        $getter = $this->callbacks->getter();
+
+        return $getter($name);
     }
 
     /**
@@ -51,7 +55,8 @@ final class StaticProxy extends \stdClass
      */
     public function __set($name, $value)
     {
-        call_user_func($this->callbacks->setter(), $name, $value);
+        $setter = $this->callbacks->setter();
+        $setter($name, $value);
     }
 
     /**
@@ -60,12 +65,15 @@ final class StaticProxy extends \stdClass
      */
     public function __isset($name)
     {
-        return call_user_func($this->callbacks->isser(), $name);
+        $isser = $this->callbacks->isser();
+
+        return $isser($name);
     }
 
     /**
      * @param  string $name
      * @return void
+     * @throws \Andrew\Exception\RuntimeException
      */
     public function __unset($name)
     {
@@ -79,6 +87,8 @@ final class StaticProxy extends \stdClass
      */
     public function __call($name, array $arguments = [])
     {
-        return call_user_func($this->callbacks->caller(), $name, $arguments);
+        $caller = $this->callbacks->caller();
+
+        return $caller($name, $arguments);
     }
 }

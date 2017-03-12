@@ -25,19 +25,25 @@ use ReflectionException;
  */
 final class Checker
 {
+    const PROPERTY        = 'property';
+    const STATIC_PROPERTY = 'static_property';
+    const METHOD          = 'method';
+    const STATIC_METHOD   = 'static_method';
+
     /**
      * @var array
      */
-    private $checked = [
-        'var'        => [],
-        'staticvar'  => [],
-        'func'       => [],
-        'staticfunc' => [],
+    private static $checked = [
+        self::PROPERTY        => [],
+        self::STATIC_PROPERTY => [],
+        self::METHOD          => [],
+        self::STATIC_METHOD   => [],
     ];
 
     /**
-     * @param object $object
+     * @param mixed  $object
      * @param string $message
+     * @throws \Andrew\Exception\ArgumentException
      */
     public function assertObject($object, $message)
     {
@@ -49,6 +55,7 @@ final class Checker
     /**
      * @param string $string
      * @param string $message
+     * @throws \Andrew\Exception\ArgumentException
      */
     public function assertString($string, $message)
     {
@@ -60,6 +67,8 @@ final class Checker
     /**
      * @param string $class
      * @param string $message
+     * @throws \Andrew\Exception\ArgumentException
+     * @throws \Andrew\Exception\ClassException
      */
     public function assertClass($class, $message)
     {
@@ -70,100 +79,146 @@ final class Checker
     }
 
     /**
-     * @param object $object
+     * @param mixed  $object
      * @param string $method
      * @param string $message
+     * @throws \Andrew\Exception\ArgumentException
+     * @throws \Andrew\Exception\MethodException
      */
     public function assertMethod($object, $method, $message)
     {
         $this->assertString($method, $message);
         $this->assertObject($object, $message);
         $class = get_class($object);
-        // check same method for same class once is enough
-        isset($this->checked['func'][$class]) or $this->checked['func'][$class] = [];
-        if (! isset($this->checked['func'][$class][$method])) {
-            try {
-                $reflection = new ReflectionMethod($class, $method);
-            } catch (ReflectionException $exception) {
-                throw new MethodException($message);
-            }
-            if ($reflection->isStatic()) {
-                throw new MethodException($message);
-            }
-            $this->checked['func'][$class][$method] = true;
+
+        // To check a method on same class is safely done once per request
+        if (isset(self::$checked[self::METHOD][$class][$method])) {
+            // @codeCoverageIgnoreStart
+            return;
+            // @codeCoverageIgnoreEnd
         }
+
+        try {
+            $reflection = new ReflectionMethod($class, $method);
+        } catch (ReflectionException $exception) {
+            throw new MethodException($message." ({$exception->getMessage()})");
+        }
+        if ($reflection->isStatic()) {
+            throw new MethodException($message);
+        }
+
+        if (! isset(self::$checked[self::METHOD][$class])) {
+            self::$checked[self::METHOD][$class] = [];
+        }
+
+        self::$checked[self::METHOD][$class][$method] = true;
     }
 
     /**
      * @param string $class
      * @param string $method
      * @param string $message
+     * @throws \Andrew\Exception\ArgumentException
+     * @throws \Andrew\Exception\ClassException
+     * @throws \Andrew\Exception\MethodException
      */
     public function assertStaticMethod($class, $method, $message)
     {
         $this->assertString($method, $message);
         $this->assertClass($class, $message);
-        // check same method for same class once is enough
-        isset($this->checked['staticfunc'][$class]) or $this->checked['staticfunc'][$class] = [];
-        if (! isset($this->checked['staticfunc'][$class][$method])) {
-            try {
-                $reflection = new ReflectionMethod($class, $method);
-            } catch (ReflectionException $exception) {
-                throw new MethodException($message);
-            }
-            if (! $reflection->isStatic()) {
-                throw new MethodException($message);
-            }
-            $this->checked['staticfunc'][$class][$method] = true;
+
+        // To check a static method on same class is safely done once per request
+        if (isset(self::$checked[self::STATIC_METHOD][$class][$method])) {
+            // @codeCoverageIgnoreStart
+            return;
+            // @codeCoverageIgnoreEnd
         }
+
+        try {
+            $reflection = new ReflectionMethod($class, $method);
+        } catch (ReflectionException $exception) {
+            throw new MethodException($message);
+        }
+        if (! $reflection->isStatic()) {
+            throw new MethodException($message);
+        }
+
+        if (! isset(self::$checked[self::STATIC_METHOD][$class])) {
+            self::$checked[self::STATIC_METHOD][$class] = [];
+        }
+
+        self::$checked[self::STATIC_METHOD][$class][$method] = true;
     }
 
     /**
-     * @param object $object
+     * @param mixed  $object
      * @param string $name
      * @param string $message
+     * @throws \Andrew\Exception\ArgumentException
+     * @throws \Andrew\Exception\PropertyException
      */
     public function assertProperty($object, $name, $message)
     {
         $this->assertString($name, $message);
         $this->assertObject($object, $message);
         $class = get_class($object);
-        // check same property for same class once is enough
-        isset($this->checked['var'][$class]) or $this->checked['var'][$class] = [];
-        if (! isset($this->checked[$class]['var'][$name])) {
-            try {
-                $reflection = new ReflectionProperty($class, $name);
-            } catch (ReflectionException $exception) {
-                throw new PropertyException($message);
-            }
-            if ($reflection->isStatic()) {
-                throw new PropertyException($message);
-            }
-            $this->checked[$class]['var'][$name] = true;
+
+        // To check a property on same class is safely done once per request
+        if (isset(self::$checked[self::PROPERTY][$class][$name])) {
+            // @codeCoverageIgnoreStart
+            return;
+            // @codeCoverageIgnoreEnd
         }
+
+        try {
+            $reflection = new ReflectionProperty($class, $name);
+        } catch (ReflectionException $exception) {
+            throw new PropertyException($message);
+        }
+        if ($reflection->isStatic()) {
+            throw new PropertyException($message);
+        }
+
+        if (! isset(self::$checked[self::PROPERTY][$class])) {
+            self::$checked[self::PROPERTY][$class] = [];
+        }
+
+        self::$checked[self::PROPERTY][$class][$name] = true;
     }
 
     /**
      * @param string $class
      * @param string $name
      * @param string $message
+     * @throws \Andrew\Exception\ArgumentException
+     * @throws \Andrew\Exception\ClassException
+     * @throws \Andrew\Exception\PropertyException
      */
     public function assertStaticProperty($class, $name, $message)
     {
         $this->assertString($name, $message);
         $this->assertClass($class, $message);
-        // check same property for same class once is enough
-        isset($this->checked['staticvar'][$class]) or $this->checked['staticvar'][$class] = [];
-        if (! isset($this->checked[$class]['staticvar'][$name])) {
-            try {
-                $reflection = new ReflectionProperty($class, $name);
-            } catch (ReflectionException $exception) {
-                throw new PropertyException($message);
-            }
-            if (! $reflection->isStatic()) {
-                throw new PropertyException($message);
-            }
-            $this->checked[$class]['staticvar'][$name] = true;
+
+        // To check a static property on same class is safely done once per request
+        if (isset(self::$checked[self::STATIC_PROPERTY][$class][$name])) {
+            // @codeCoverageIgnoreStart
+            return;
+            // @codeCoverageIgnoreEnd
         }
+
+        try {
+            $reflection = new ReflectionProperty($class, $name);
+        } catch (ReflectionException $exception) {
+            throw new PropertyException($message);
+        }
+        if (! $reflection->isStatic()) {
+            throw new PropertyException($message);
+        }
+
+        if (! isset(self::$checked[self::STATIC_PROPERTY][$class])) {
+            self::$checked[self::STATIC_PROPERTY][$class] = [];
+        }
+
+        self::$checked[self::STATIC_PROPERTY][$class][$name] = true;
     }
 }

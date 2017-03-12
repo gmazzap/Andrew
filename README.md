@@ -4,9 +4,9 @@
 
 -------
 
-[![travis-ci status](https://img.shields.io/travis/Giuseppe-Mazzapica/Andrew.svg?style=flat-square)](https://travis-ci.org/Giuseppe-Mazzapica/Andrew)
-[![codecov.io](https://img.shields.io/codecov/c/github/Giuseppe-Mazzapica/Andrew.svg?style=flat-square)](http://codecov.io/github/Giuseppe-Mazzapica/Andrew?branch=master)
-[![license](https://img.shields.io/github/license/Giuseppe-Mazzapica/Andrew.svg?style=flat-square)](http://opensource.org/licenses/MIT)
+[![travis-ci status](https://img.shields.io/travis/gmazzap/Andrew.svg?style=flat-square)](https://travis-ci.org/Giuseppe-Mazzapica/Andrew)
+[![codecov.io](https://img.shields.io/codecov/c/github/gmazzap/Andrew.svg?style=flat-square)](http://codecov.io/github/Giuseppe-Mazzapica/Andrew?branch=master)
+[![license](https://img.shields.io/github/license/gmazzap/Andrew.svg?style=flat-square)](http://opensource.org/licenses/MIT)
 
 -------
 
@@ -22,12 +22,20 @@ It provides 2 "proxy" objects, one for dynamic properties and methods, the other
 Let's assume following class
 
 ```php
-class Foo
+class Subject
 {
   private $var = 'I am private';
   
+  public function getVar() {
+      return $this->var;
+  }
+  
+  public function hasVar() {
+      return isset($this->var);
+  }
+  
   private function testMe() {
-    return 'I am private';
+      return 'I am private';
   }
 }
 ```
@@ -35,25 +43,31 @@ class Foo
 With *Andrew* is possible to:
 
 ```php
-$proxy = new Andrew\Proxy(new Foo());
+$subject = new Subject();
 
-// getter
+$proxy = new Andrew\Proxy($subject);
+
+// get subject private var via proxy
 echo $proxy->var; // 'I am private'
 
-// setter
+// set subject private var via proxy
 $proxy->var = 'I WAS private';
-echo $proxy->var; // 'I WAS private'
+echo $subject->getVar(); // 'I WAS private'
 
-// isser
+// check subject private var is set via proxy
 isset($proxy->var); // true
 
-// unsetter
+// unset subject private var via proxy
 unset($proxy->var);
-isset($proxy->var); // false
+$subject->hasVar(); // false
 
-// caller
+// call subject private method via proxy
 echo $proxy->testMe() // 'I am private'
 ```
+
+The `Subject` class example has public getter and isser for its private variable, that we added for
+test purposes, bu Andrew proxy is, of course, more useful when classes does not provide that 
+possibility.
 
 
 # Static Proxy
@@ -61,27 +75,31 @@ echo $proxy->testMe() // 'I am private'
 Let's assume following class
 
 ```php
-class Foo
+class Subject
 {
-  private static $var = 'I am private static';
+    private static $var = 'I am private static';
   
-  private static function testMe() {
-    return 'I am private static';
-  }
+    public static function getVar() {
+        return self::$var;
+    }
+  
+    private static function testMe() {
+        return 'I am private static';
+    }
 }
 ```
 
 With *Andrew* is possible to:
 
 ```php
-$proxy = new Andrew\StaticProxy('Foo'); // we pass class name, not object
+$proxy = new Andrew\StaticProxy(Subject::class); // we pass class name, not object
 
 // getter
 echo $proxy->var; // 'I am private static'
 
 // setter
 $proxy->var = 'I WAS private static';
-echo $proxy->var; // 'I WAS private static'
+echo Subject::getVar(); // 'I WAS private static'
 
 // isser
 isset($proxy->var); // true
@@ -90,7 +108,7 @@ isset($proxy->var); // true
 echo $proxy->testMe() // 'I am private static'
 ```
 
-Note that `StaticProxy` has **not** unsetter, because PHP [does not allow unsett static variables](http://3v4l.org/91GTk).
+Note that `StaticProxy` has **not** unsetter, because PHP [does not allow to unset static variables](http://3v4l.org/91GTk).
 
 If you try to unset anything on a `StaticProxy` object, *Andrew* will throw an Exception.
 
@@ -119,7 +137,7 @@ No. But may be quite useful in unit tests.
 
 # Requirements
 
-*Andrew* has no dependencies. Requires PHP 5.4+, works with PHP 7 and HHVM. 
+*Andrew* has no dependencies. Requires PHP 5.6+, works with PHP 7 and 7.1. 
 
 # License
 

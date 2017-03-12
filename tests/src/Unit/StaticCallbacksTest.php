@@ -29,9 +29,17 @@ class StaticCallbacksTest extends PHPUnit_Framework_TestCase
         new StaticCallbacks('meh');
     }
 
+    /**
+     * @expectedException \Andrew\Exception\ClassException
+     */
+    public function testConstructorFailsIfStdClass()
+    {
+        new StaticCallbacks(\stdClass::class);
+    }
+
     public function testGetter()
     {
-        $callbacks = new StaticCallbacks('Andrew\Tests\Stub');
+        $callbacks = new StaticCallbacks(Stub::class);
         $getter = $callbacks->getter();
         assertInternalType('callable', $getter);
         assertSame('Private Static Var', $getter('private_static_var'));
@@ -39,7 +47,7 @@ class StaticCallbacksTest extends PHPUnit_Framework_TestCase
 
     public function testSetter()
     {
-        $callbacks = new StaticCallbacks('Andrew\Tests\Stub');
+        $callbacks = new StaticCallbacks(Stub::class);
         $setter = $callbacks->setter();
         assertInternalType('callable', $setter);
         assertSame('Private Static Var', Stub::staticGet());
@@ -49,7 +57,7 @@ class StaticCallbacksTest extends PHPUnit_Framework_TestCase
 
     public function testIsser()
     {
-        $callbacks = new StaticCallbacks('Andrew\Tests\Stub');
+        $callbacks = new StaticCallbacks(Stub::class);
         $isser = $callbacks->isser();
         assertInternalType('callable', $isser);
         assertTrue($isser('private_static_var'));
@@ -60,13 +68,13 @@ class StaticCallbacksTest extends PHPUnit_Framework_TestCase
      */
     public function testUnsetter()
     {
-        $callbacks = new StaticCallbacks('Andrew\Tests\Stub');
+        $callbacks = new StaticCallbacks(Stub::class);
         $callbacks->unsetter();
     }
 
     public function testCaller()
     {
-        $callbacks = new StaticCallbacks('Andrew\Tests\Stub');
+        $callbacks = new StaticCallbacks(Stub::class);
         $caller = $callbacks->caller();
         assertInternalType('callable', $caller);
         assertSame('Private Static Method Test!', $caller('privateStaticMethod', [' Test!']));

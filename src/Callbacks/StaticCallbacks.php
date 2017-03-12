@@ -11,6 +11,7 @@
 namespace Andrew\Callbacks;
 
 use Andrew\Checker\Checker;
+use Andrew\Exception\ClassException;
 use Andrew\Exception\RuntimeException;
 use Closure;
 use ReflectionClass;
@@ -22,6 +23,25 @@ use ReflectionClass;
  */
 final class StaticCallbacks implements CallbacksInterface
 {
+    const TYPE_CHECKS_MAP = [
+        self::GETTER => [
+            'assertStaticProperty',
+            'Undeclared static properties can not be retrieved.'
+        ],
+        self::SETTER => [
+            'assertStaticProperty',
+            'Undeclared static properties can not be set.'
+        ],
+        self::ISSER  => [
+            'assertStaticProperty',
+            'Undeclared static properties can not be checked.'
+        ],
+        self::CALLER => [
+            'assertStaticMethod',
+            'Undeclared static methods can not be called.'
+        ],
+    ];
+
     /**
      * @var string
      */
@@ -38,12 +58,22 @@ final class StaticCallbacks implements CallbacksInterface
     private $checker;
 
     /**
+     * @var \Closure[]
+     */
+    private $callbacks = [];
+
+    /**
      * @param string                  $class
      * @param \Andrew\Checker\Checker $checker
+     * @throws \Andrew\Exception\ClassException
+     * @throws \Andrew\Exception\ArgumentException
      */
     public function __construct($class, Checker $checker = null)
     {
-        is_null($checker) and $checker = new Checker();
+        if (ltrim($class, '\\') === 'stdClass') {
+            throw new ClassException('It is not possible to use static proxy with stdClass.');
+        }
+        $checker or $checker = new Checker();
         $checker->assertClass($class, __CLASS__.' expects a fully qualified class name.');
         $this->checker = $checker;
         $this->class = $class;
@@ -55,18 +85,7 @@ final class StaticCallbacks implements CallbacksInterface
      */
     public function getter()
     {
-        $checker = $this->checker;
-        $getter = function ($var) use ($checker) {
-            $checker->assertStaticProperty(
-                get_called_class(),
-                $var,
-                'Undeclared static properties can not be retrieved.'
-            );
-
-            return static::$$var;
-        };
-
-        return Closure::bind($getter, $this->object, $this->class);
+        return $this->createCallback(self::GETTER);
     }
 
     /**
@@ -74,17 +93,7 @@ final class StaticCallbacks implements CallbacksInterface
      */
     public function setter()
     {
-        $checker = $this->checker;
-        $setter = function ($var, $value) use ($checker) {
-            $checker->assertStaticProperty(
-                get_called_class(),
-                $var,
-                'Undeclared static properties can not be set.'
-            );
-            static::$$var = $value;
-        };
-
-        return Closure::bind($setter, $this->object, $this->class);
+        return $this->createCallback(self::SETTER);
     }
 
     /**
@@ -92,22 +101,12 @@ final class StaticCallbacks implements CallbacksInterface
      */
     public function isser()
     {
-        $checker = $this->checker;
-        $isser = function ($var) use ($checker) {
-            $checker->assertStaticProperty(
-                get_called_class(),
-                $var,
-                'Undeclared static properties can not be checked.'
-            );
-
-            return isset(static::$$var);
-        };
-
-        return Closure::bind($isser, $this->object, $this->class);
+        return $this->createCallback(self::ISSER);
     }
 
     /**
      * @return void
+     * @throws \Andrew\Exception\RuntimeException
      */
     public function unsetter()
     {
@@ -119,18 +118,48 @@ final class StaticCallbacks implements CallbacksInterface
      */
     public function caller()
     {
-        $checker = $this->checker;
-        $caller = function ($method, $args) use ($checker) {
-            $class = get_called_class();
-            $checker->assertStaticMethod(
-                $class,
-                $method,
-                'Undeclared static methods can not be called.'
-            );
+        return $this->createCallback(self::CALLER);
+    }
 
-            return call_user_func_array([$class, $method], $args);
+    /**
+     * @param string $which
+     * @return \Closure
+     */
+    private function createCallback($which)
+    {
+        if (isset($this->callbacks[$which])) {
+            // @codeCoverageIgnoreStart
+            return $this->callbacks[$which];
+            // @codeCoverageIgnoreEnd
+        }
+
+        $checker = $this->checker;
+        $class = $this->class;
+
+        $caller = function ($key, $value = null) use ($which, $checker, $class) {
+            list($checkMethod, $checkMessage) = StaticCallbacks::TYPE_CHECKS_MAP[$which];
+            /** @var callable $checkerCallback */
+            $checkerCallback = [$checker, $checkMethod];
+            $checkerCallback($class, $key, $checkMessage);
+
+            switch ($which) {
+                case StaticCallbacks::CALLER:
+                    /** @var callable $method */
+                    $method = [$class, $key];
+
+                    return $value ? $method(...$value) : $method();
+                case StaticCallbacks::GETTER:
+                    return static::${$key};
+                case StaticCallbacks::SETTER:
+                    static::${$key} = $value;
+                    break;
+                case StaticCallbacks::ISSER:
+                    return isset(static::${$key});
+            }
         };
 
-        return Closure::bind($caller, $this->object, $this->class);
+        $this->callbacks[$which] = Closure::bind($caller, $this->object, $this->class);
+
+        return $this->callbacks[$which];
     }
 }

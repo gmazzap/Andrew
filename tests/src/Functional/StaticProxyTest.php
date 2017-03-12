@@ -24,7 +24,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testGetter()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
 
         assertSame('Private Static Var', $proxy->private_static_var);
     }
@@ -34,7 +34,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testGetterPublic()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
 
         assertSame('Public Static Var', $proxy->public_static_var);
     }
@@ -45,7 +45,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testGetterFailsIfBadProperty()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
         $proxy->meh;
     }
 
@@ -55,7 +55,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testGetterFailsIfDynamicProperty()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
         $proxy->public_var;
     }
 
@@ -65,7 +65,8 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testGetterFailsIfBadArgument()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__get(0);
     }
 
@@ -74,7 +75,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testSetter()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
 
         assertSame('Private Static Var', Stub::staticGet());
         $proxy->private_static_var = 'Edited Private Static Var';
@@ -86,7 +87,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testSetterPublic()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
         assertSame('Public Static Var', Stub::$public_static_var);
         $proxy->public_static_var = 'Edited Public Static Var';
         assertSame('Edited Public Static Var', Stub::$public_static_var);
@@ -98,7 +99,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testSetterFailsIfBadVar()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
         $proxy->meh = 'Meh';
     }
 
@@ -108,7 +109,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testSetterFailsIfDynamicVar()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
         $proxy->public_var = 'Meh';
     }
 
@@ -118,7 +119,8 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testSetterFailsIfBadArgument()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__set(1, []);
     }
 
@@ -127,7 +129,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testIsser()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
 
         assertTrue(isset($proxy->private_static_var));
     }
@@ -137,7 +139,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testIsserPublic()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
 
         assertTrue(isset($proxy->public_static_var));
     }
@@ -148,7 +150,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testIsserFailsIfBadVar()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
         $meh = isset($proxy->meh);
     }
 
@@ -158,8 +160,9 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testIsserFailsIfDynamicVar()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
-        $meh = isset($proxy->public_var);
+        $proxy = new StaticProxy(Stub::class);
+        /** @noinspection PhpExpressionResultUnusedInspection */
+        isset($proxy->public_var);
     }
 
     /**
@@ -168,7 +171,8 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testIsserFailsIfBadArgument()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__isset(true);
     }
 
@@ -178,7 +182,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testUnsetterFails()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
         unset($proxy->private_static_var);
     }
 
@@ -188,7 +192,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testUnsetterFailsPublic()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
         unset($proxy->public_static_var);
     }
 
@@ -197,8 +201,9 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testCaller()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
 
+        /** @noinspection PhpUndefinedMethodInspection */
         assertSame('Private Static Method', $proxy->privateStaticMethod());
     }
 
@@ -207,8 +212,9 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testCallerPublic()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
 
+        /** @noinspection PhpUndefinedMethodInspection */
         assertSame('Public Static Method', $proxy->publicStaticMethod());
     }
 
@@ -218,7 +224,8 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testCallerFailsIfBadMethod()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
+        /** @noinspection PhpUndefinedMethodInspection */
         $proxy->meh();
     }
 
@@ -228,7 +235,8 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testCallerFailsIfDynamicMethod()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
+        /** @noinspection PhpUndefinedMethodInspection */
         $proxy->publicDynamicMethod();
     }
 
@@ -238,7 +246,8 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
      */
     public function testCallerFailsIfBadArgument()
     {
-        $proxy = new StaticProxy('Andrew\Tests\Stub');
+        $proxy = new StaticProxy(Stub::class);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__call([], []);
     }
 }

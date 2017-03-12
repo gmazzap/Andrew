@@ -68,6 +68,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     {
         $stub = new Stub();
         $proxy = new Proxy($stub);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__get(true);
     }
 
@@ -125,6 +126,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     {
         $stub = new Stub();
         $proxy = new Proxy($stub);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__set([], '');
     }
 
@@ -182,6 +184,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     {
         $stub = new Stub();
         $proxy = new Proxy($stub);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__isset(1);
     }
 
@@ -206,8 +209,10 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
         $stub = new Stub();
         $proxy = new Proxy($stub);
 
+        /** @noinspection UnSafeIsSetOverArrayInspection */
         assertTrue(isset($stub->public_var));
         unset($proxy->public_var);
+        /** @noinspection UnSafeIsSetOverArrayInspection */
         assertFalse(isset($stub->public_var));
     }
 
@@ -241,6 +246,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     {
         $stub = new Stub();
         $proxy = new Proxy($stub);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__unset(true);
     }
 
@@ -252,6 +258,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
         $stub = new Stub();
         $proxy = new Proxy($stub);
 
+        /** @noinspection PhpUndefinedMethodInspection */
         assertSame('Private Dynamic Method', $proxy->privateDynamicMethod());
     }
 
@@ -263,6 +270,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
         $stub = new Stub();
         $proxy = new Proxy($stub);
 
+        /** @noinspection PhpUndefinedMethodInspection */
         assertSame('Public Dynamic Method', $proxy->publicDynamicMethod());
     }
 
@@ -274,6 +282,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     {
         $stub = new Stub();
         $proxy = new Proxy($stub);
+        /** @noinspection PhpUndefinedMethodInspection */
         $proxy->meh();
     }
 
@@ -285,6 +294,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     {
         $stub = new Stub();
         $proxy = new Proxy($stub);
+        /** @noinspection PhpUndefinedMethodInspection */
         $proxy->publicStaticMethod();
     }
 
@@ -296,6 +306,7 @@ class DynamicProxyTest extends PHPUnit_Framework_TestCase
     {
         $stub = new Stub();
         $proxy = new Proxy($stub);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__call([], []);
     }
 

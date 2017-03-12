@@ -17,6 +17,12 @@ namespace Andrew\Callbacks;
  */
 interface CallbacksInterface
 {
+    const GETTER   = 'getter';
+    const SETTER   = 'setter';
+    const ISSER    = 'isser';
+    const UNSETTER = 'unsetter';
+    const CALLER   = 'caller';
+
     /**
      * @return callable
      */

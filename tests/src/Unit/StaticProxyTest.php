@@ -12,6 +12,7 @@ namespace Andrew\Tests\Unit;
 
 use Andrew\StaticProxy;
 use PHPUnit_Framework_TestCase;
+use Andrew\Callbacks\CallbacksInterface;
 
 /**
  * @author  Giuseppe Mazzapica <giuseppe.mazzapica@gmail.com>
@@ -20,14 +21,15 @@ use PHPUnit_Framework_TestCase;
  */
 class StaticProxyTest extends PHPUnit_Framework_TestCase
 {
+
     /**
-     * @param                                       $method
-     * @param  callable                             $callback
-     * @return \Andrew\Callbacks\CallbacksInterface
+     * @param  string   $method
+     * @param  callable $callback
+     * @return \Andrew\Callbacks\CallbacksInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockedCallbacks($method, callable $callback)
     {
-        $callbacks = $this->getMockBuilder('Andrew\Callbacks\CallbacksInterface')->getMock();
+        $callbacks = $this->getMockBuilder(CallbacksInterface::class)->getMock();
         $callbacks
             ->expects($this->once())
             ->method($method)
@@ -45,6 +47,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
         $callbacks = $this->getMockedCallbacks('getter', $function);
         $proxy = new StaticProxy(__CLASS__, $callbacks);
 
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__get('foo');
     }
 
@@ -58,6 +61,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
         $callbacks = $this->getMockedCallbacks('setter', $function);
         $proxy = new StaticProxy(__CLASS__, $callbacks);
 
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__set('foo', 'bar');
     }
 
@@ -70,6 +74,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
         $callbacks = $this->getMockedCallbacks('isser', $function);
         $proxy = new StaticProxy(__CLASS__, $callbacks);
 
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__isset('foo');
     }
 
@@ -79,8 +84,9 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     public function testUnset()
     {
         /** @var \Andrew\Callbacks\CallbacksInterface $callbacks */
-        $callbacks = $this->getMockBuilder('Andrew\Callbacks\CallbacksInterface')->getMock();
+        $callbacks = $this->getMockBuilder(CallbacksInterface::class)->getMock();
         $proxy = new StaticProxy(__CLASS__, $callbacks);
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__unset('foo');
     }
 
@@ -94,6 +100,7 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
         $callbacks = $this->getMockedCallbacks('caller', $function);
         $proxy = new StaticProxy(__CLASS__, $callbacks);
 
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__call('foo', ['foo', 'bar']);
     }
 }

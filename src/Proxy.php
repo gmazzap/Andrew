@@ -20,18 +20,21 @@ use Andrew\Callbacks\DynamicCallbacks;
  */
 final class Proxy extends \stdClass
 {
+
     /**
      * @var array
      */
     private $callbacks;
 
     /**
-     * @param object                                    $object
+     * @param mixed                                     $object
      * @param \Andrew\Callbacks\CallbacksInterface|null $callbacks
+     * @throws \Andrew\Exception\ArgumentException
+     * @throws \Andrew\Exception\ClassException
      */
     public function __construct($object, CallbacksInterface $callbacks = null)
     {
-        $this->callbacks = $callbacks ?: new DynamicCallbacks($object);
+        $this->callbacks = $callbacks ? : new DynamicCallbacks($object);
     }
 
     /**
@@ -40,17 +43,20 @@ final class Proxy extends \stdClass
      */
     public function __get($name)
     {
-        return call_user_func($this->callbacks->getter(), $name);
+        $getter = $this->callbacks->getter();
+
+        return $getter($name);
     }
 
     /**
-     * @param  string $name
-     * @param         $value
+     * @param string $name
+     * @param mixed  $value
      * @return void
      */
     public function __set($name, $value)
     {
-        call_user_func($this->callbacks->setter(), $name, $value);
+        $setter = $this->callbacks->setter();
+        $setter($name, $value);
     }
 
     /**
@@ -59,7 +65,9 @@ final class Proxy extends \stdClass
      */
     public function __isset($name)
     {
-        return call_user_func($this->callbacks->isser(), $name);
+        $isser = $this->callbacks->isser();
+
+        return $isser($name);
     }
 
     /**
@@ -68,7 +76,8 @@ final class Proxy extends \stdClass
      */
     public function __unset($name)
     {
-        call_user_func($this->callbacks->unsetter(), $name);
+        $unsetter = $this->callbacks->unsetter();
+        $unsetter($name);
     }
 
     /**
@@ -78,7 +87,9 @@ final class Proxy extends \stdClass
      */
     public function __call($name, array $arguments = [])
     {
-        return call_user_func($this->callbacks->caller(), $name, $arguments);
+        $caller = $this->callbacks->caller();
+
+        return $caller($name, $arguments);
     }
 
     /**
@@ -86,6 +97,9 @@ final class Proxy extends \stdClass
      */
     public function __invoke()
     {
-        return $this->__call('__invoke', func_get_args());
+        $args = func_get_args();
+        $caller = $this->callbacks->caller();
+
+        return $caller('__invoke', $args);
     }
 }
