@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-$vendor = dirname(dirname(__FILE__)).'/vendor/';
+$vendor = dirname(__DIR__).'/vendor/';
 
 if (! realpath($vendor)) {
     die('Please install via Composer before running tests.');

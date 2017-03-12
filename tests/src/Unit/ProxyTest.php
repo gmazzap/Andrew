@@ -12,6 +12,7 @@ namespace Andrew\Tests\Unit;
 
 use Andrew\Proxy;
 use PHPUnit_Framework_TestCase;
+use Andrew\Callbacks\CallbacksInterface;
 
 /**
  * @author  Giuseppe Mazzapica <giuseppe.mazzapica@gmail.com>
@@ -20,14 +21,15 @@ use PHPUnit_Framework_TestCase;
  */
 class ProxyTest extends PHPUnit_Framework_TestCase
 {
+
     /**
-     * @param                                       $method
-     * @param  callable                             $callback
-     * @return \Andrew\Callbacks\CallbacksInterface
+     * @param  string   $method
+     * @param  callable $callback
+     * @return \Andrew\Callbacks\CallbacksInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private function getMockedCallbacks($method, callable $callback)
     {
-        $callbacks = $this->getMockBuilder('Andrew\Callbacks\CallbacksInterface')->getMock();
+        $callbacks = $this->getMockBuilder(CallbacksInterface::class)->getMock();
         $callbacks
             ->expects($this->once())
             ->method($method)
@@ -45,6 +47,7 @@ class ProxyTest extends PHPUnit_Framework_TestCase
         $callbacks = $this->getMockedCallbacks('getter', $function);
         $proxy = new Proxy($this, $callbacks);
 
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__get('foo');
     }
 
@@ -58,6 +61,7 @@ class ProxyTest extends PHPUnit_Framework_TestCase
         $callbacks = $this->getMockedCallbacks('setter', $function);
         $proxy = new Proxy($this, $callbacks);
 
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__set('foo', 'bar');
     }
 
@@ -70,6 +74,7 @@ class ProxyTest extends PHPUnit_Framework_TestCase
         $callbacks = $this->getMockedCallbacks('isser', $function);
         $proxy = new Proxy($this, $callbacks);
 
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__isset('foo');
     }
 
@@ -82,6 +87,7 @@ class ProxyTest extends PHPUnit_Framework_TestCase
         $callbacks = $this->getMockedCallbacks('unsetter', $function);
         $proxy = new Proxy($this, $callbacks);
 
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__unset('foo');
     }
 
@@ -95,6 +101,7 @@ class ProxyTest extends PHPUnit_Framework_TestCase
         $callbacks = $this->getMockedCallbacks('caller', $function);
         $proxy = new Proxy($this, $callbacks);
 
+        /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__call('foo', ['foo', 'bar']);
     }
 

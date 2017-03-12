@@ -67,6 +67,7 @@ class Stub
      */
     public static function staticCheck()
     {
+        /** @noinspection UnSafeIsSetOverArrayInspection */
         return isset(self::$private_static_var);
     }
 
@@ -108,6 +109,7 @@ class Stub
      */
     public function check()
     {
+        /** @noinspection UnSafeIsSetOverArrayInspection */
         return isset($this->private_var);
     }
 }

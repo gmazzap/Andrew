@@ -30,6 +30,7 @@ class CheckerTest extends PHPUnit_Framework_TestCase
     public function testAssertObject()
     {
         $checker = new Checker();
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         assertNull($checker->assertObject($this, ''));
     }
 
@@ -46,6 +47,7 @@ class CheckerTest extends PHPUnit_Framework_TestCase
     public function testAssertString()
     {
         $checker = new Checker();
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         assertNull($checker->assertString('ok', ''));
     }
 
@@ -62,6 +64,7 @@ class CheckerTest extends PHPUnit_Framework_TestCase
     public function testAssertClass()
     {
         $checker = new Checker();
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         assertNull($checker->assertClass(__CLASS__, ''));
     }
 
@@ -88,6 +91,7 @@ class CheckerTest extends PHPUnit_Framework_TestCase
     public function testAssertMethod()
     {
         $checker = new Checker();
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         assertNull($checker->assertMethod($this, __FUNCTION__, ''));
     }
 
@@ -134,6 +138,7 @@ class CheckerTest extends PHPUnit_Framework_TestCase
     public function testAssertStaticMethod()
     {
         $checker = new Checker();
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         assertNull($checker->assertStaticMethod(__CLASS__, 'stubMethod', ''));
     }
 
@@ -180,6 +185,7 @@ class CheckerTest extends PHPUnit_Framework_TestCase
     public function testAssertProperty()
     {
         $checker = new Checker();
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         assertNull($checker->assertProperty($this, 'var', ''));
     }
 
@@ -226,6 +232,7 @@ class CheckerTest extends PHPUnit_Framework_TestCase
     public function testAssertStaticProperty()
     {
         $checker = new Checker();
+        /** @noinspection PhpVoidFunctionResultUsedInspection */
         assertNull($checker->assertStaticProperty(__CLASS__, 'staticvar', ''));
     }
 
