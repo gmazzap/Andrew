@@ -10,6 +10,8 @@
 
 namespace Andrew\Tests\Unit;
 
+use Andrew\Exception\ClassException;
+use Andrew\Exception\RuntimeException;
 use PHPUnit_Framework_TestCase;
 use Andrew\Callbacks\StaticCallbacks;
 use Andrew\Tests\Stub;
@@ -21,19 +23,17 @@ use Andrew\Tests\Stub;
  */
 class StaticCallbacksTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException \Andrew\Exception\ClassException
-     */
     public function testConstructorFailsIfNoClass()
     {
+        $this->expectException(ClassException::class);
+
         new StaticCallbacks('meh');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ClassException
-     */
     public function testConstructorFailsIfStdClass()
     {
+        $this->expectException(ClassException::class);
+
         new StaticCallbacks(\stdClass::class);
     }
 
@@ -63,11 +63,10 @@ class StaticCallbacksTest extends PHPUnit_Framework_TestCase
         assertTrue($isser('private_static_var'));
     }
 
-    /**
-     * @expectedException \Andrew\Exception\RuntimeException
-     */
     public function testUnsetter()
     {
+        $this->expectException(RuntimeException::class);
+
         $callbacks = new StaticCallbacks(Stub::class);
         $callbacks->unsetter();
     }

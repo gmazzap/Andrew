@@ -10,6 +10,8 @@
 
 namespace Andrew\Tests\Unit;
 
+use Andrew\Exception\ArgumentException;
+use Andrew\Exception\ClassException;
 use PHPUnit_Framework_TestCase;
 use Andrew\Callbacks\DynamicCallbacks;
 use Andrew\Tests\Stub;
@@ -21,19 +23,17 @@ use Andrew\Tests\Stub;
  */
 class DynamicCallbacksTest extends PHPUnit_Framework_TestCase
 {
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     */
     public function testConstructorFailsIfNoObject()
     {
+        $this->expectException(ArgumentException::class);
+
         new DynamicCallbacks(__CLASS__);
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ClassException
-     */
     public function testConstructorFailsIfStdClass()
     {
+        $this->expectException(ClassException::class);
+
         new DynamicCallbacks(new \stdClass());
     }
 

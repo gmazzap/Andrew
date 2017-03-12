@@ -10,6 +10,10 @@
 
 namespace Andrew\Tests\Unit;
 
+use Andrew\Exception\ArgumentException;
+use Andrew\Exception\ClassException;
+use Andrew\Exception\MethodException;
+use Andrew\Exception\PropertyException;
 use PHPUnit_Framework_TestCase;
 use Andrew\Checker\Checker;
 
@@ -34,12 +38,11 @@ class CheckerTest extends PHPUnit_Framework_TestCase
         assertNull($checker->assertObject($this, ''));
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertObjectException()
     {
+        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertObject('meh!', 'WTF?!?');
     }
@@ -51,12 +54,11 @@ class CheckerTest extends PHPUnit_Framework_TestCase
         assertNull($checker->assertString('ok', ''));
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertStringException()
     {
+        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertString(1, 'WTF?!?');
     }
@@ -68,22 +70,20 @@ class CheckerTest extends PHPUnit_Framework_TestCase
         assertNull($checker->assertClass(__CLASS__, ''));
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertClassExceptionIfNoString()
     {
+        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertClass($this, 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ClassException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertClassExceptionIfNoClass()
     {
+        $this->expectException(ClassException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertClass('meh!', 'WTF?!?');
     }
@@ -95,42 +95,38 @@ class CheckerTest extends PHPUnit_Framework_TestCase
         assertNull($checker->assertMethod($this, __FUNCTION__, ''));
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertMethodExceptionIfNoString()
     {
+        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertMethod($this, [], 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertMethodExceptionIfNoObject()
     {
+        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertMethod(__CLASS__, __FUNCTION__, 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\MethodException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertMethodExceptionIfNotMethod()
     {
+        $this->expectException(MethodException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertMethod($this, 'meh!', 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\MethodException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertMethodExceptionIfStaticMethod()
     {
+        $this->expectException(MethodException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertMethod($this, 'stubMethod', 'WTF?!?');
     }
@@ -142,42 +138,38 @@ class CheckerTest extends PHPUnit_Framework_TestCase
         assertNull($checker->assertStaticMethod(__CLASS__, 'stubMethod', ''));
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertStaticMethodExceptionIfNoString()
     {
+        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertStaticMethod(__CLASS__, [], 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ClassException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertMethodExceptionIfNoClass()
     {
+        $this->expectException(ClassException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertStaticMethod('meh!', 'privateStaticMethod', 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\MethodException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertMethodExceptionIfNoMethod()
     {
+        $this->expectException(MethodException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertStaticMethod(__CLASS__, 'meh!', 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\MethodException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertMethodExceptionIfDynamicMethod()
     {
+        $this->expectException(MethodException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertStaticMethod(__CLASS__, __FUNCTION__, 'WTF?!?');
     }
@@ -189,42 +181,38 @@ class CheckerTest extends PHPUnit_Framework_TestCase
         assertNull($checker->assertProperty($this, 'var', ''));
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertPropertyExceptionIfNoString()
     {
+        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertProperty($this, 0, 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertPropertyExceptionIfNoObject()
     {
+        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertProperty(__CLASS__, 'var', 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\PropertyException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertPropertyExceptionIfNoProperty()
     {
+        $this->expectException(PropertyException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertProperty($this, 'meh!', 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\PropertyException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertPropertyExceptionIfStaticProperty()
     {
+        $this->expectException(PropertyException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertProperty($this, 'staticvar', 'WTF?!?');
     }
@@ -236,42 +224,38 @@ class CheckerTest extends PHPUnit_Framework_TestCase
         assertNull($checker->assertStaticProperty(__CLASS__, 'staticvar', ''));
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ArgumentException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertStaticPropertyExceptionIfNoString()
     {
+        $this->expectException(ArgumentException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertStaticProperty(__CLASS__, 0, 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\ClassException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertStaticPropertyExceptionIfNoClass()
     {
+        $this->expectException(ClassException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertStaticProperty('meh!', 'staticvar', 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\PropertyException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertStaticPropertyExceptionIfNoProperty()
     {
+        $this->expectException(PropertyException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertStaticProperty(__CLASS__, 'meh!', 'WTF?!?');
     }
 
-    /**
-     * @expectedException \Andrew\Exception\PropertyException
-     * @expectedExceptionMessage WTF?!?
-     */
     public function testAssertPropertyExceptionIfDynamicProperty()
     {
+        $this->expectException(PropertyException::class);
+        $this->expectExceptionMessage('WTF?!?');
+
         $checker = new Checker();
         $checker->assertStaticProperty(__CLASS__, 'var', 'WTF?!?');
     }

@@ -17,6 +17,7 @@ namespace Andrew\Tests;
  */
 class Stub
 {
+
     /**
      * @var string
      */
@@ -77,6 +78,14 @@ class Stub
     public function __invoke()
     {
         return func_get_args();
+    }
+
+    /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return 'I am the Stub';
     }
 
     /**

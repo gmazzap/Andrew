@@ -10,6 +10,10 @@
 
 namespace Andrew\Tests\Functional;
 
+use Andrew\Exception\ArgumentException;
+use Andrew\Exception\MethodException;
+use Andrew\Exception\PropertyException;
+use Andrew\Exception\RuntimeException;
 use Andrew\StaticProxy;
 use PHPUnit_Framework_TestCase;
 use Andrew\Tests\Stub;
@@ -19,6 +23,7 @@ use Andrew\Tests\Stub;
  */
 class StaticProxyTest extends PHPUnit_Framework_TestCase
 {
+
     /**
      * @coversNothing
      */
@@ -40,31 +45,34 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Andrew\Exception\PropertyException
      * @coversNothing
      */
     public function testGetterFailsIfBadProperty()
     {
+        $this->expectException(PropertyException::class);
+
         $proxy = new StaticProxy(Stub::class);
         $proxy->meh;
     }
 
     /**
-     * @expectedException \Andrew\Exception\PropertyException
      * @coversNothing
      */
     public function testGetterFailsIfDynamicProperty()
     {
+        $this->expectException(PropertyException::class);
+
         $proxy = new StaticProxy(Stub::class);
         $proxy->public_var;
     }
 
     /**
-     * @expectedException \Andrew\Exception\ArgumentException
      * @coversNothing
      */
     public function testGetterFailsIfBadArgument()
     {
+        $this->expectException(ArgumentException::class);
+
         $proxy = new StaticProxy(Stub::class);
         /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__get(0);
@@ -94,31 +102,34 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Andrew\Exception\PropertyException
      * @coversNothing
      */
     public function testSetterFailsIfBadVar()
     {
+        $this->expectException(PropertyException::class);
+
         $proxy = new StaticProxy(Stub::class);
         $proxy->meh = 'Meh';
     }
 
     /**
-     * @expectedException \Andrew\Exception\PropertyException
      * @coversNothing
      */
     public function testSetterFailsIfDynamicVar()
     {
+        $this->expectException(PropertyException::class);
+
         $proxy = new StaticProxy(Stub::class);
         $proxy->public_var = 'Meh';
     }
 
     /**
-     * @expectedException \Andrew\Exception\ArgumentException
      * @coversNothing
      */
     public function testSetterFailsIfBadArgument()
     {
+        $this->expectException(ArgumentException::class);
+
         $proxy = new StaticProxy(Stub::class);
         /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__set(1, []);
@@ -145,53 +156,59 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Andrew\Exception\PropertyException
      * @coversNothing
      */
     public function testIsserFailsIfBadVar()
     {
+        $this->expectException(PropertyException::class);
+
         $proxy = new StaticProxy(Stub::class);
-        $meh = isset($proxy->meh);
+        /** @noinspection PhpExpressionResultUnusedInspection */
+        isset($proxy->meh);
     }
 
     /**
-     * @expectedException \Andrew\Exception\PropertyException
      * @coversNothing
      */
     public function testIsserFailsIfDynamicVar()
     {
+        $this->expectException(PropertyException::class);
+
         $proxy = new StaticProxy(Stub::class);
         /** @noinspection PhpExpressionResultUnusedInspection */
         isset($proxy->public_var);
     }
 
     /**
-     * @expectedException \Andrew\Exception\ArgumentException
      * @coversNothing
      */
     public function testIsserFailsIfBadArgument()
     {
+        $this->expectException(ArgumentException::class);
+
         $proxy = new StaticProxy(Stub::class);
         /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__isset(true);
     }
 
     /**
-     * @expectedException \Andrew\Exception\RuntimeException
      * @coversNothing
      */
     public function testUnsetterFails()
     {
+        $this->expectException(RuntimeException::class);
+
         $proxy = new StaticProxy(Stub::class);
         unset($proxy->private_static_var);
     }
 
     /**
-     * @expectedException \Andrew\Exception\RuntimeException
      * @coversNothing
      */
     public function testUnsetterFailsPublic()
     {
+        $this->expectException(RuntimeException::class);
+
         $proxy = new StaticProxy(Stub::class);
         unset($proxy->public_static_var);
     }
@@ -219,33 +236,36 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
     }
 
     /**
-     * @expectedException \Andrew\Exception\MethodException
      * @coversNothing
      */
     public function testCallerFailsIfBadMethod()
     {
+        $this->expectException(MethodException::class);
+
         $proxy = new StaticProxy(Stub::class);
         /** @noinspection PhpUndefinedMethodInspection */
         $proxy->meh();
     }
 
     /**
-     * @expectedException \Andrew\Exception\MethodException
      * @coversNothing
      */
     public function testCallerFailsIfDynamicMethod()
     {
+        $this->expectException(MethodException::class);
+
         $proxy = new StaticProxy(Stub::class);
         /** @noinspection PhpUndefinedMethodInspection */
         $proxy->publicDynamicMethod();
     }
 
     /**
-     * @expectedException \Andrew\Exception\ArgumentException
      * @coversNothing
      */
     public function testCallerFailsIfBadArgument()
     {
+        $this->expectException(ArgumentException::class);
+
         $proxy = new StaticProxy(Stub::class);
         /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__call([], []);

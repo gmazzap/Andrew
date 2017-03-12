@@ -10,6 +10,7 @@
 
 namespace Andrew\Tests\Unit;
 
+use Andrew\Exception\RuntimeException;
 use Andrew\StaticProxy;
 use PHPUnit_Framework_TestCase;
 use Andrew\Callbacks\CallbacksInterface;
@@ -77,12 +78,11 @@ class StaticProxyTest extends PHPUnit_Framework_TestCase
         /** @noinspection ImplicitMagicMethodCallInspection */
         $proxy->__isset('foo');
     }
-
-    /**
-     * @expectedException \Andrew\Exception\RuntimeException
-     */
+    
     public function testUnset()
     {
+        $this->expectException(RuntimeException::class);
+
         /** @var \Andrew\Callbacks\CallbacksInterface $callbacks */
         $callbacks = $this->getMockBuilder(CallbacksInterface::class)->getMock();
         $proxy = new StaticProxy(__CLASS__, $callbacks);

@@ -116,4 +116,18 @@ class ProxyTest extends PHPUnit_Framework_TestCase
         $proxy = new Proxy($this, $callbacks);
         $proxy('foo', 'bar');
     }
+
+    public function testToString()
+    {
+        $function = function ($method) {
+            assertSame('__toString', $method);
+
+            return 'Test!';
+        };
+
+        $callbacks = $this->getMockedCallbacks('caller', $function);
+        $proxy = new Proxy($this, $callbacks);
+
+        assertSame('Test!', (string)$proxy);
+    }
 }

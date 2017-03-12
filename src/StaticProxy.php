@@ -21,6 +21,7 @@ use Andrew\Exception\RuntimeException;
  */
 final class StaticProxy extends \stdClass
 {
+
     /**
      * @var array
      */
@@ -34,7 +35,7 @@ final class StaticProxy extends \stdClass
      */
     public function __construct($class, CallbacksInterface $callbacks = null)
     {
-        $this->callbacks = $callbacks ?: new StaticCallbacks($class);
+        $this->callbacks = $callbacks ? : new StaticCallbacks($class);
     }
 
     /**
